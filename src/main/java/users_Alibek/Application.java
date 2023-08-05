@@ -32,7 +32,20 @@ public class Application {
                     usersTypedQuery.setParameter(1, login);
                     Users user = usersTypedQuery.getSingleResult();
                     if (user != null) {
-
+                        System.out.print("Введите пароль: ");
+                        String password = scanner.nextLine();
+                        boolean correctPassword = false;
+                        while (!correctPassword) {
+                            if (password.equals(user.getPassword())) {
+                                correctPassword = true;
+                                String userInfo = "Город: %s\n, Имя: %s\n, Фамилия: %s";
+                                System.out.printf((userInfo) + "%n", user.getCity().getName(),
+                                        user.getName(), user.getSurname());
+                            } else {
+                                System.out.print("Неверный пароль, попробуйте еще раз: ");
+                                password = scanner.nextLine();
+                            }
+                        }
                     } else {
                         System.out.println("Неверный логин");
                     }
