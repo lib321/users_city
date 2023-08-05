@@ -18,5 +18,11 @@ create table users
     foreign key (city_id) references city (id)
 );
 
+insert into city (index, name)
+values ('0000010', 'Astana'),
+       ('0000020', 'Alma-ata'),
+       ('0000400', 'Moscow'),
+       ('0000050', 'London');
+
 
 

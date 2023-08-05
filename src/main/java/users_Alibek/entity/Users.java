@@ -1,4 +1,4 @@
-package entity;
+package users_Alibek.entity;
 
 import jakarta.persistence.*;
 
