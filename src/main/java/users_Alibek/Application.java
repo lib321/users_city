@@ -92,7 +92,12 @@ public class Application {
                     String cityId = scanner.nextLine();
                     long id = Integer.parseInt(cityId);
                     City city;
-                    if (id != 0) {
+                    while (id > cities.size()) {
+                        System.out.println("Неккоректный номер города, попробуйте еще раз");
+                        cityId = scanner.nextLine();
+                        id = Integer.parseInt(cityId);
+                    }
+                    if (id != 0 && id < cities.size()) {
                         city = manager.find(City.class, id);
                     } else {
                         city = new City();
