@@ -59,13 +59,32 @@ public class Application {
                     System.out.print("Введите логин: ");
                     Users user = new Users();
                     login = scanner.nextLine();
+                    user.setLogin(login);
                     System.out.print("Введите пароль: ");
                     password = scanner.nextLine();
+                    user.setPassword(password);
+                    System.out.print("Введите имя: ");
+                    String name = scanner.nextLine();
+                    user.setName(name);
+                    System.out.print("Введите фамилию: ");
+                    String surname = scanner.nextLine();
+                    user.setSurname(surname);
                     TypedQuery<City> cityTypedQuery = manager.createQuery("select c from City c", City.class);
-                    System.out.print("Введите город: ");
+                    System.out.println("Выберите город: ");
                     List<City> cities = cityTypedQuery.getResultList();
+                    System.out.println("[0] - ввести свой город");
                     for (City city : cities) {
-                        System.out.println(city.getName());
+                        System.out.println("[" + city.getId() + "] " + city.getName());
+                    }
+                    System.out.print("Введите номер: ");
+                    String cityId = scanner.nextLine();
+                    long id = Integer.parseInt(cityId);
+                    if (id != 0) {
+                        City city = manager.find(City.class, id);
+                        user.setCity(city);
+                        manager.persist(user);
+                    } else {
+
                     }
                 }
             }
