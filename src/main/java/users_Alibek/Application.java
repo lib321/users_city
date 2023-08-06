@@ -27,7 +27,7 @@ public class Application {
             switch (str) {
                 case "1" -> {
                     boolean correctLogin = false;
-                    while (!correctLogin){
+                    while (!correctLogin) {
                         try {
                             System.out.print("Введите логин: ");
                             login = scanner.nextLine();
@@ -56,10 +56,22 @@ public class Application {
                     }
                 }
                 case "2" -> {
-                    System.out.print("Введите логин: ");
+                    boolean isLoginExist = false;
                     Users user = new Users();
-                    login = scanner.nextLine();
-                    user.setLogin(login);
+                    while (!isLoginExist) {
+                        System.out.print("Введите логин: ");
+                        login = scanner.nextLine();
+                        try {
+                            TypedQuery<Users> usersTypedQuery = manager.createQuery("select u from Users u where u.login = ?1",
+                                    Users.class);
+                            usersTypedQuery.setParameter(1, login);
+                            user = usersTypedQuery.getSingleResult();
+                            System.out.println("Такой логин уже существует");
+                        } catch (NoResultException e) {
+                            isLoginExist = true;
+                            user.setLogin(login);
+                        }
+                    }
                     System.out.print("Введите пароль: ");
                     password = scanner.nextLine();
                     user.setPassword(password);
