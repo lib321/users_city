@@ -86,20 +86,14 @@ public class Application {
                     List<City> cities = cityTypedQuery.getResultList();
                     System.out.println("[0] - ввести свой город");
                     for (City city : cities) {
-                        System.out.println("[" + city.getId() + "] " + city.getName());
+                        System.out.println("[" + city.getIndex() + "] " + city.getName());
                     }
                     System.out.print("Введите номер: ");
-                    String cityId = scanner.nextLine();
-                    long id = Integer.parseInt(cityId);
-                    City city;
-                    while (id > cities.size()) {
-                        System.out.println("Неккоректный номер города, попробуйте еще раз");
-                        cityId = scanner.nextLine();
-                        id = Integer.parseInt(cityId);
-                    }
-                    if (id != 0 && id < cities.size()) {
-                        city = manager.find(City.class, id);
-                    } else {
+                    String cityIndex = scanner.nextLine();
+                    City city = null;
+                    boolean correctCityIndex = false;
+                    if (cityIndex.equals("0")) {
+                        correctCityIndex = true;
                         city = new City();
                         System.out.print("Введите название гроода: ");
                         String cityName = scanner.nextLine();
@@ -108,6 +102,18 @@ public class Application {
                         String index = scanner.nextLine();
                         city.setIndex(index);
                         manager.persist(city);
+                    }
+                    while (!correctCityIndex) {
+                        try {
+                            TypedQuery<City> cityIndexTypedQuery = manager.createQuery("select c from City c where c.index = ?1",
+                                    City.class);
+                            cityIndexTypedQuery.setParameter(1, cityIndex);
+                            city = cityIndexTypedQuery.getSingleResult();
+                            correctCityIndex = true;
+                        } catch (NoResultException e) {
+                            System.out.print("Неккоректный номер, введите еще раз ");
+                            cityIndex = scanner.nextLine();
+                        }
                     }
                     user.setCity(city);
                     manager.persist(user);
