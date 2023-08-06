@@ -79,13 +79,21 @@ public class Application {
                     System.out.print("Введите номер: ");
                     String cityId = scanner.nextLine();
                     long id = Integer.parseInt(cityId);
+                    City city;
                     if (id != 0) {
-                        City city = manager.find(City.class, id);
-                        user.setCity(city);
-                        manager.persist(user);
+                        city = manager.find(City.class, id);
                     } else {
-
+                        city = new City();
+                        System.out.print("Введите название гроода: ");
+                        String cityName = scanner.nextLine();
+                        city.setName(cityName);
+                        System.out.print("Введите индекс города: ");
+                        String index = scanner.nextLine();
+                        city.setIndex(index);
+                        manager.persist(city);
                     }
+                    user.setCity(city);
+                    manager.persist(user);
                 }
             }
             manager.getTransaction().commit();
