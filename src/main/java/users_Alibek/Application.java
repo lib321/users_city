@@ -1,9 +1,6 @@
 package users_Alibek;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import users_Alibek.entity.City;
 import users_Alibek.entity.Users;
 
@@ -29,29 +26,33 @@ public class Application {
             String password;
             switch (str) {
                 case "1" -> {
-                    System.out.print("Введите логин: ");
-                    login = scanner.nextLine();
-                    TypedQuery<Users> usersTypedQuery = manager.createQuery("select u from Users u where u.login = ?1",
-                            Users.class);
-                    usersTypedQuery.setParameter(1, login);
-                    Users user = usersTypedQuery.getSingleResult();
-                    if (user != null) {
-                        System.out.print("Введите пароль: ");
-                        password = scanner.nextLine();
-                        boolean correctPassword = false;
-                        while (!correctPassword) {
-                            if (password.equals(user.getPassword())) {
-                                correctPassword = true;
-                                String userInfo = "Город: %s\n, Имя: %s\n, Фамилия: %s";
-                                System.out.printf((userInfo) + "%n", user.getCity().getName(),
-                                        user.getName(), user.getSurname());
-                            } else {
-                                System.out.print("Неверный пароль, попробуйте еще раз: ");
-                                password = scanner.nextLine();
+                    boolean correctLogin = false;
+                    while (!correctLogin){
+                        try {
+                            System.out.print("Введите логин: ");
+                            login = scanner.nextLine();
+                            TypedQuery<Users> usersTypedQuery = manager.createQuery("select u from Users u where u.login = ?1",
+                                    Users.class);
+                            usersTypedQuery.setParameter(1, login);
+                            Users user = usersTypedQuery.getSingleResult();
+                            System.out.print("Введите пароль: ");
+                            password = scanner.nextLine();
+                            boolean correctPassword = false;
+                            while (!correctPassword) {
+                                if (password.equals(user.getPassword())) {
+                                    correctPassword = true;
+                                    String userInfo = "Город: %s\nИмя: %s\nФамилия: %s";
+                                    System.out.printf((userInfo) + "%n", user.getCity().getName(),
+                                            user.getName(), user.getSurname());
+                                    correctLogin = true;
+                                } else {
+                                    System.out.print("Неверный пароль, попробуйте еще раз: ");
+                                    password = scanner.nextLine();
+                                }
                             }
+                        } catch (NoResultException e) {
+                            System.out.println("Неправильный логин, попробуйте еще раз");
                         }
-                    } else {
-                        System.out.println("Неверный логин");
                     }
                 }
                 case "2" -> {
